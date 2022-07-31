@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello React+JSX</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      // my app's code
+    </script>
+  </body>
+</html>
+
+<!--
+    Note how <script> becomes <script type="text/babel">. This is a trick where, 
+    by specifying an invalid type, the browser ignores the code. 
+    This gives Babel a chance to parse and transform the JSX syntax into something the browser can run.
+-->
