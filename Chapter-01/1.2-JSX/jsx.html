@@ -1,0 +1,39 @@
+<!--
+    When you start nesting components, you quickly end up with a lot of function calls and parentheses to keep track of.
+    To make things easier, you can use the JSX syntax. JSX is a little controversial: people often find it repulsive at first sight 
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="my-heading">
+      <!-- my app renders here -->C:\Users\Owner\Source\React-up-and-running\libs
+    </div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script>
+      // my app's code
+      ReactDOM.render(
+        <h1 id="my-heading">
+          <span>
+            Hello <em>Wonderful</em>
+          </span>
+          world!
+        </h1>,
+        document.getElementById("my-heading")
+      );
+    </script>
+  </body>
+</html>
+
+<!--
+    This syntax looks very much like HTML
+    it’s not valid JavaScript that browsers can understand
+    You need to transpile this code to make it work in the browser
+    You need the Babel library which translates cutting-edge JavaScript (and JSX) to old school JavaScript 
+    that works in ancient browsers.
+-->
