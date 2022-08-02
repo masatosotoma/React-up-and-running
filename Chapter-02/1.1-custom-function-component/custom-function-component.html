@@ -1,0 +1,34 @@
+<!--
+    
+Example of a function component
+
+const MyComponent = function(){
+    return 'I am so custom'
+}
+
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Function Components</title>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script>
+      const MyComponent = function () {
+        return React.createElement("span", null, "I am so custom");
+      };
+
+      ReactDOM.render(MyComponent(), document.getElementById("app"));
+    </script>
+  </body>
+</html>
+
+<!--
+    the custom component is just a function that returns the UI that you want. 
+    In this case, the UI is only text but you’ll often need a little bit more, most likely a composition of other components.
+-->
