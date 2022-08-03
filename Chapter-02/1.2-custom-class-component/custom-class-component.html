@@ -1,0 +1,31 @@
+<!--
+    The second way to create a component is to define a class that extends React.Component and implements a render() function:
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Class Component</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script>
+      class MyComponent extends React.Component {
+        render() {
+          return React.createElement("span", null, "I am so custom");
+          //or with JSX:
+          //return <span>I am so custom</span>
+        }
+      }
+      ReactDOM.render(
+        React.createElement(MyComponent),
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
