@@ -1,0 +1,38 @@
+<!--
+  Rendering hard-coded UI in your custom components is perfectly fine and has its uses. 
+  But the components can also take properties and render or behave differently,
+  depending on the values of the properties. Think about the <a> element in HTML 
+  and how it acts differently based on the value of the href attribute. 
+  The idea of properties in React is similar (and so is the JSX syntax).
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Class Component</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class MyComponent extends React.Component {
+        render() {
+          return (
+            <span>
+              My name is <em>{this.props.name}</em>
+            </span>
+          );
+        }
+      }
+      ReactDOM.render(
+        <MyComponent name="Bob" />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
