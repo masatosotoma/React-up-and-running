@@ -1,0 +1,52 @@
+<!--
+    In function components, there’s no this (in JavaScript’s strict mode), or this refers to the global object 
+    So instead of this.props, you get a props object passed to your function as the first argument:
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Class Component</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      const MyComponent1 = function (props) {
+        return (
+          <span>
+            My name is <em>{props.name}</em>
+          </span>
+        );
+      };
+
+      //A common pattern is to use JavaScript’s destructuring assignment and assign the property values to local variables.
+      const MyComponent2 = function ({ name }) {
+        return (
+          <span>
+            My name is <em>{name}</em>
+          </span>
+        );
+      };
+
+      //You can have as many properties as you want. If, for example, you need two proper‐ ties (name and job)
+      const MyComponent3 = function ({ name, job }) {
+        return (
+          <span>
+            My name is <em>{name}</em>,the {job}
+          </span>
+        );
+      };
+
+      ReactDOM.render(
+        <MyComponent3 name="Bob" job="engineer"/>,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
