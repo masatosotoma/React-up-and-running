@@ -1,0 +1,40 @@
+<!--—a textarea that keeps count of the number of characters typed in-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Textarea Component</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      //Start first by creating a “stateless” version that doesn’t handle updates
+      class TextAreaCounter extends React.Component {
+        render() {
+          const text = this.props.text;
+          return (
+            <div>
+              <textarea defaultValue={text} />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+      }
+      TextAreaCounter.defaultProps = {
+        text: "Count me as I type",
+      };
+
+      //You (as well as other future consumers of this amazingly reusable component) can use the new component
+      ReactDOM.render(
+        <TextAreaCounter text="Bob" />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
