@@ -1,0 +1,65 @@
+<!-- to turn this stateless component into a stateful one -->
+
+<!--
+    First, you need to set the initial state in the class constructor using this.state. 
+    Bear in mind that the constructor is the only place where it’s OK to set the state directly without calling this.setState().
+
+    Initializing this.state is required; if you don’t do it, consecutive access to this.state in the render() method will fail.
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Make it stateful</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class TextAreaCounter extends React.Component {
+        //Calling super() in the constructor is required before you can use this.
+        constructor() {
+          super();
+          this.state = {};
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            /*Note that before you had <textarea defaultValue...>, which is now <textarea value...> 
+                in the preceding code. This is because of the way inputs work in HTML 
+                where their state is maintained by the browser*/
+            <div>
+              <textarea
+                defaultValue={text}
+                onChange={(event) => this.onTextChange(event)}
+              />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+        /*The data this component maintains is the contents of the textarea, 
+        so the state has only one property called text, which is accessible via this.state.text.
+        
+        Always update the state with this.setState(), 
+        which takes an object and merges it with the already existing data in this.state.*/
+
+        //onTextChange() is an event handler that takes an event object and reaches into it to get the contents of the textarea input 
+        onTextChange(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+      }
+
+      ReactDOM.render(
+        <TextAreaCounter text="Bob" />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
