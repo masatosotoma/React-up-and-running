@@ -1,0 +1,54 @@
+<!--
+    In the DOM world it’s common to use element.addEventListener to set up listeners 
+    (which now leads to having code in two places or more) and event delegation (to address the performance issues)
+    Event delegation means you listen to events at some parent node, 
+    say a <div> that contains many buttons, and you set up one listener for all the buttons, 
+    instead of one listener per button. Hence you delegate the event handling to a parent authority.
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Event Handling in the Olden Days</title>
+  </head>
+  <div id="parent">
+    <button id="ok">OK</button>
+    <button id="cancel">Cancel</button>
+  </div>
+
+  <script>
+    document
+      .getElementById("parent")
+      .addEventListener("click", function (event) {
+        const button = event.target;
+
+        //do different things based on which button was clicked
+        switch (button.id) {
+          case "ok":
+            console.log("OK!");
+            break;
+          case "cancel":
+            console.log("Cancel");
+            break;
+          default:
+            new Error("Unexpected button ID");
+        }
+      });
+  </script>
+</html>
+
+<!--
+• Declaring the listener is further away from the UI component, which makes code harder to find and debug.
+• Using delegation and always switch-ing creates unnecessary boilerplate code 
+even before you get to do the actual work (responding to a button click in this case).
+• Browser inconsistencies (omitted here) actually require this code to be longer.
+
+
+When it comes to taking this code live in front of real users, 
+you need a few more additions if you want to support old browsers:
+
+• You need attachEvent in addition to addEventListener.
+• You need const event = event || window.event; at the top of the listener.
+• You need const button = event.target || event.srcElement;.
+
+-->
