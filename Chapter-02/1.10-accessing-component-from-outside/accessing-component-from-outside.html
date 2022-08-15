@@ -1,0 +1,60 @@
+<!--
+    Sometimes you need to hook into an existing application or a website and migrate to React one piece at a time.
+    React was designed to work with any preexisting codebase.
+
+    One way your React app can communicate with the outside world is to get a reference 
+    to a component you render with ReactDOM.render() and use it from outside of the component:
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Make it stateful</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class TextAreaCounter extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <textarea
+                defaultValue={text}
+                onChange={(event) => this.onTextChange(event)}
+              />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+        onTextChange(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+      }
+
+      const myTextAreaCounter = ReactDOM.render(
+        <TextAreaCounter text="Bob" />,
+        document.getElementById("app")
+      );
+      /*you can use myTextAreaCounter to access the same methods 
+      and properties you normally access with this when inside the component. 
+      You can even play with the component using your JavaScript console
+      */
+      myTextAreaCounter.setState({ text: "Hello outside world!" });
+      const reactAppNode = ReactDOM.findDOMNode(myTextAreaCounter);
+      //This is the first child of the <div id="app">, which is where you told React to do itsmagic.
+    </script>
+  </body>
+</html>
