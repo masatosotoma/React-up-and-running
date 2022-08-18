@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lifecycle Example: Log it all</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class TextAreaCounter extends React.Component {
+        // ...
+        componentDidMount() {
+          console.log("componentDidMount");
+        }
+        componentWillUnmount() {
+          console.log("componentWillUnmount");
+        }
+        componentDidUpdate(prevProps, prevState, snapshot) {
+          console.log("componentDidUpdate ", prevProps, prevState, snapshot);
+        }
+        getSnapshotBeforeUpdate(prevProps, prevState) {
+          console.log("getSnapshotBeforeUpdate", prevProps, prevState);
+          return "hello";
+        }
+        shouldComponentUpdate(newProps, newState) {
+          console.log("shouldComponentUpdate ", newProps, newState);
+          return true;
+        }
+        // ...
+      }
+    </script>
+  </body>
+</html>
