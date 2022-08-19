@@ -13,7 +13,17 @@
     <script src="../libs/babel.js"></script>
     <script type="text/babel">
       class TextAreaCounter extends React.Component {
-        // ...
+        constructor() {
+          super();
+          this.state = {};
+          this.onTextChange = this.onTextChange.bind(this);
+        }
+
+        onTextChange(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
         componentDidMount() {
           console.log("componentDidMount");
         }
@@ -31,8 +41,20 @@
           console.log("shouldComponentUpdate ", newProps, newState);
           return true;
         }
-        // ...
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <textarea value={text} onChange={this.onTextChange} />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
       }
+      const myTextAreaCounter = ReactDOM.render(
+        <TextAreaCounter text="Bob" />,
+        document.getElementById("app")
+      );
     </script>
   </body>
 </html>
