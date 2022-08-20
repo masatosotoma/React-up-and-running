@@ -1,0 +1,60 @@
+<!--
+    When you want to to restrict the number of characters to be typed in the textarea.
+    But what if someone calls setState() from the outside of the component?
+    You can do the validation in componentDidUpdate() 
+    and if the number of characters is greater than allowed, revert the state back to what it was
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Paranoid State Protection</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class TextAreaCounter extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+          this.onTextChange = this.onTextChange.bind(this);
+        }
+        onTextChange(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+        ComponentDidUpdate(prevProps, prevState) {
+          if (this.state.text.length > 3) {
+            this.setState({
+              //The condition prevState.text || this.props.text is in place for the very first update when there’s no previous state
+              text: prevProps.text || this.props.text,
+            });
+          }
+        }
+        render() {
+          const text = "text" in this.state ? this.state.text : this.props.text;
+          return (
+            <div>
+              <textarea value={text} onChange={this.onTextChange} />
+              <h3>{text.length}</h3>
+            </div>
+          );
+        }
+      }
+      TextAreaCounter.defaultProps = {
+        text: "Count me as I type",
+      };
+      const myTextAreaCounter = ReactDOM.render(
+        <TextAreaCounter text="Bob" />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
