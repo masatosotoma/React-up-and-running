@@ -1,3 +1,10 @@
+<!--Isolate the part responsible for the counter into its own component. After all,
+  divide and conquer is what it’s all about-->
+
+<!--Let’s isolate the lifestyle logging into a separate class and have the two components inherit it. 
+  Inheritance is almost never warranted when it comes to React because for UI work, 
+  composition is preferable, and for non-UI work, a regular JavaScript module would do.-->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -14,6 +21,7 @@
 
     <script src="../libs/babel.js"></script>
     <script type="text/babel">
+      //This is the parent:
       class LifecycleLoggerComponent extends React.Component {
         static getName() {}
         componentDidMount() {
@@ -27,6 +35,8 @@
         }
       }
 
+      /*The new Counter component simply shows the count. 
+      It doesn’t maintain state but displays the count property given by the parent:*/
       class Counter extends LifecycleLoggerComponent {
         static getName() {
           return "Counter";
@@ -39,6 +49,7 @@
         count: 0,
       };
 
+      //The textarea component sets up a static getName() method:
       class TextAreaCounter extends LifecycleLoggerComponent {
         static getName() {
           return "TextAreaCounter";
@@ -55,6 +66,7 @@
           });
         }
 
+        //the textarea’s render() gets to use <Counter/> and use it conditionally; if the count is 0, nothing is displayed:
         render() {
           const text = "text" in this.state ? this.state.text : this.props.text;
           return (
