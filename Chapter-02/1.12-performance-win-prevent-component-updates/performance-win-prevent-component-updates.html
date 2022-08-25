@@ -1,0 +1,36 @@
+<!--
+    shouldComponentUpdate() = invoked before componentWillUpdate() 
+    and gives you a chance to cancel the update if you decide it’s not necessary.
+
+    There is a class of components that use only this.props and this.state in their render() methods 
+    and no additional function calls. These components are called “pure” components.
+
+    They can implement shouldComponentUpdate() and compare the state and the properties before 
+    and after an update and if there aren’t any changes, return false and save some processing power. 
+    Additionally, there can be pure static components that use neither props nor state. These can straight out return false
+
+    React can make it easier to use the common (and generic) case of checking all props 
+    and state in shouldComponentUpdate(): instead of repeating this work, you can have your components inherit React.
+    PureComponent instead of React.Component.
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Performance Win: Prevent Component Updates</title>
+  </head>
+  <body>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class LifecycleLoggerComponent extends React.PureComponent {
+        // ... no other changes
+      }
+      render() {console.log(this.constructor.getName() + '::render');
+        // ... no other changes
+      }
+    </script>
+  </body>
+</html>
