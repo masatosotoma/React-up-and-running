@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Table Headers Loop</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class Excel extends React.Component {
+        render() {
+          const headers = [];
+          for (const title of this.props.headers) {
+            headers.push(<th>{title}</th>);
+          }
+          /*The return part of the component is fairly simple. 
+          It looks just like an HTML table except for the headers array*/
+          return (
+            <table>
+              <thead>
+                <tr>{headers}</tr>
+              </thead>
+            </table>
+          );
+        }
+      }
+
+      const headers = ["Book", "Author", "Language", "Published", "Sales"];
+
+      ReactDOM.render(
+        <Excel headers={headers} />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
+
+<!--
+    You can open curly braces in your JSX and put any JavaScript value or expression in there. 
+    If this value happens to be an array as in the previous case, 
+    the JSX parser treats it as if you passed each element of the array individually, like {headers[0]}{headers[1]}....
+-->
+
+<!--
+    You can have JavaScript expressions in curly braces within JSX and you can nest them as deep as you need.
+    Loops and conditions all work as usual, and you don’t need to learn another “templating” language or syntax to build the UI.
+-->
