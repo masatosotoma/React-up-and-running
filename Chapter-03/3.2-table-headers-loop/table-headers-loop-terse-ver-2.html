@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Table Headers Loop Terse Ver2</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class Excel extends React.Component {
+        render() {
+          return (
+            <table>
+              <thead>
+                <tr>
+                  {this.props.headers.map((title) => {
+                    return <th>{title}</th>;
+                  })}
+                </tr>
+              </thead>
+            </table>
+          );
+        }
+      }
+      const headers = ["Book", "Author", "Language", "Published", "Sales"];
+
+      ReactDOM.render(
+        <Excel headers={headers} />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
+
+<!--
+    You can choose your preferred way of iterating over arrays to produce JSX output based on personal preference 
+    and complexity of the content to be rendered. Simple data is conveniently looped over inline in the JSX
+
+    If the type of data is a little too much for an inline map() 
+    you may find it more readable to have the content generated at the top of the render function and keep the JSX simple, 
+    in a way separating data from presentation (v1 is an example). 
+    Sometimes too many inline expressions can be confusing when keeping track of all closing parentheses and curly braces.
+-->
