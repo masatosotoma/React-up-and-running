@@ -1,0 +1,39 @@
+<!--In essence the whole render() method becomes a single return-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Table Headers Loop Terse Ver2</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class Excel extends React.Component {
+        render() {
+          return (
+            <table>
+              <thead>
+                <tr>
+                  {this.props.headers.map((title) => (
+                    <th>{title}</th>
+                  ))}
+                </tr>
+              </thead>
+            </table>
+          );
+        }
+      }
+      const headers = ["Book", "Author", "Language", "Published", "Sales"];
+
+      ReactDOM.render(
+        <Excel headers={headers} />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
