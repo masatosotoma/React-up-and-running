@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Debugging the Console Warning Ver2</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class Excel extends React.Component {
+        render() {
+          return (
+
+            <table>
+              <thead>
+                <tr>
+                  {this.props.headers.map((title, idx) => {
+                    return <th key={idx}>{title}</th>;//takes the element index from the second argument passed to the callback function:
+                  })}
+                </tr>
+              </thead>
+            </table>
+          );
+        }
+      }
+      const headers = ["Book", "Author", "Language", "Published", "Sales"];
+
+      ReactDOM.render(
+        <Excel headers={headers} />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
