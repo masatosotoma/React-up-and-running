@@ -1,0 +1,81 @@
+<!--
+    The data to be rendered is a two-dimensional array (rows and columns) that looks like the following:
+
+    const data = [
+        [ 'A Tale of Two Cities', 'Charles Dickens', 'English', '1859', '200 million',],
+....
+    ]
+
+
+    initialData = new prop
+    The caller of your Excel component should be able to pass data to initialize the table. 
+    Later, as the table lives on, the data will change, because the user is able to sort, edit, and so on. 
+    In other words, the state of the component will change.
+    Use this.state.data to keep track of the changes and use this.props.initialData to let the caller initialize the component
+
+    You need to add a constructor to set the initial state from the given data. 
+    The constructor receives props as an argument and also needs to call its parent’s constructor via super():
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Adding TD Content</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class Excel extends React.Component {
+        constructor(props) {
+          super();
+          this.state = { data: props.initialData };
+        }
+        render() {
+          /*you need two loops: one that goes through rows and one that goes through the data (cells) for each row. 
+            This can be accomplished using two of the same .map() loops*/
+          return (
+            <table>
+              <thead>
+                <tr>
+                  {this.props.headers.map((title, idx) => (
+                    <th key={idx}>{title}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.data.map((row, idx) => (
+                  <tr key={idx}>
+                    {row.map((cell, idx) => (
+                      <td key={idx}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          );
+        }
+      }
+      //both loops need key={idx}, and in this case the name idx was recycled for use as local variables within each loop.
+
+      const headers = ["Book", "Author", "Language", "Published", "Sales"];
+      const data = [
+        [
+          "A Tale of Two Cities",
+          "Charles Dickens",
+          "English",
+          "1859",
+          "200 million",
+        ],
+      ];
+
+      ReactDOM.render(
+        <Excel headers={headers} initialData={data} />, //adding initialData prop here
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
