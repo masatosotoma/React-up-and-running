@@ -30,7 +30,12 @@
           const data = clone(this.state.data);
           const descending =
             this.state.sortby == column && !this.state.descending;
+          //this.state.sortby = The index of the column currently being sorted
+          //this.state.descending = A boolean to determine ascending versus descending sorting
 
+          /*In the sort() function, default is ascending (A to Z), 
+          unless the index of the new column is the same as the current sort-by column 
+          and the sorting is not already descending from a previous click on the header*/
           data.sort((a, b) => {
             if (a[column] === b[column]) {
               return 0;
@@ -43,12 +48,17 @@
               ? 1
               : -1;
           });
+          //And finally, you need to set the new state:
           this.setState({
             data,
             sortby: column,
             descending,
           });
         }
+        /*
+        For the currently sorted column, let’s just add an arrow symbol to the title. 
+        Now the headers loop looks like the following:
+        */
         render() {
           return (
             <table>
