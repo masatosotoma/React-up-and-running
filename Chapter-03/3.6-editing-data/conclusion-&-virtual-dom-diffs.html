@@ -73,6 +73,13 @@
           });
         }
 
+        /*
+        React calls your render() method and creates a lightweight tree representation of the desired DOM result. 
+        This is known as a virtual DOM tree.
+
+        When the render() method is called again, React takes the virtual tree before and after and computes a diff. 
+        Based on this diff, React figures out the minimum required DOM operations to carry on that change into the browser’s DOM
+        */
         render() {
           return (
             <table>
@@ -162,6 +169,12 @@
         <Excel headers={headers} initialData={data} />,
         document.getElementById("app")
       );
+
+      /*
+      React has your back when it comes to performance and updating the UI by: 
+      • Touching the DOM lightly 
+      • Using event delegation for user interactions
+      */
     </script>
   </body>
 </html>
