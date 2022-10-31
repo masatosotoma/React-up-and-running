@@ -15,6 +15,148 @@
         return JSON.parse(JSON.stringify(o));
       }
 
+      class Excel extends React.Component {
+        constructor(props) {
+          super();
+          this.state = {
+            data: props.initialData,
+            sortby: null,
+            descending: false,
+            edit: null, // {row: index, column: index}
+          };
+          this.sort = this.sort.bind(this);
+          this.showEditor = this.showEditor.bind(this);
+          this.save = this.save.bind(this);
+        }
+
+        sort(e) {
+          const column = e.target.cellIndex;
+          const data = clone(this.state.data);
+          const descending =
+            this.state.sortby === column && !this.state.descending;
+          data.sort((a, b) => {
+            if (a[column] === b[column]) {
+              return 0;
+            }
+            return descending
+              ? a[column] < b[column]
+                ? 1
+                : -1
+              : a[column] > b[column]
+              ? 1
+              : -1;
+          });
+          this.setState({
+            data,
+            sortby: column,
+            descending,
+          });
+        }
+
+        showEditor(e) {
+          this.setState({
+            edit: {
+              row: parseInt(e.target.parentNode.dataset.row, 10),
+              column: e.target.cellIndex,
+            },
+          });
+        }
+
+        save(e) {
+          e.preventDefault();
+          const input = e.target.firstChild;
+          const data = clone(this.state.data);
+          data[this.state.edit.row][this.state.edit.column] = input.value;
+          this.setState({
+            edit: null,
+            data,
+          });
+          if (this.preSearchData) {
+            this.preSearchData[this.state.edit.row][this.state.edit.column] =
+              input.value;
+          }
+        }
+
+        toggleSearch() {
+          if (this.state.search) {
+            this.setState({
+              data: this.preSearchData,
+              search: false,
+            });
+            this.preSearchData = null;
+          } else {
+            this.preSearchData = this.state.data;
+            this.setState({
+              search: true,
+            });
+          }
+        }
+
+        search(e) {
+          /*You get the search string from the change event’s target (which is the input box).
+          Called it “needle” as we’re looking for a needle in a haystack of data:*/
+          const needle = e.target.value.toLowerCase();
+
+          /*If there’s no search string (the user erased what they typed), the function takes the original,  
+          cached data, and this data becomes the new state:*/
+          if (!needle) {
+            this.setState({ data: this.preSearchData });
+            return;
+          }
+          /*If there is a search string, filter the original data and set the filtered results as the new state of the data:*/
+          const idx = e.target.dataset.idx;
+          const searchdata = this.preSearchData.filter((row) => {
+            return row[idx].toString().toLowerCase().indexOf(needle) > -1;
+          });
+          this.setState({ data: searchdata });
+        }
+
+        /*
+        React calls your render() method and creates a lightweight tree representation of the desired DOM result. 
+        This is known as a virtual DOM tree.
+
+        When the render() method is called again, React takes the virtual tree before and after and computes a diff. 
+        Based on this diff, React figures out the minimum required DOM operations to carry on that change into the browser’s DOM
+        */
+        render() {
+          return (
+            <table>
+              <thead onClick={this.sort}>
+                <tr>
+                  {this.props.headers.map((title, idx) => {
+                    if (this.state.sortby === idx) {
+                      title += this.state.descending ? " \u2191" : " \u2193";
+                    }
+                    return <th key={idx}>{title}</th>;
+                  })}
+                </tr>
+              </thead>
+              <tbody onDoubleClick={this.showEditor}>
+                {this.state.data.map((row, rowidx) => (
+                  <tr key={rowidx} data-row={rowidx}>
+                    {row.map((cell, columnidx) => {
+                      const edit = this.state.edit;
+                      if (
+                        edit &&
+                        edit.row === rowidx &&
+                        edit.column === columnidx
+                      ) {
+                        cell = (
+                          <form onSubmit={this.save}>
+                            <input type="text" defaultValue={cell} />
+                          </form>
+                        );
+                      }
+                      return <td key={columnidx}>{cell}</td>;
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          );
+        }
+      }
+
       Excel.propTypes = {
         headers: PropTypes.arrayOf(PropTypes.string),
         initialData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
