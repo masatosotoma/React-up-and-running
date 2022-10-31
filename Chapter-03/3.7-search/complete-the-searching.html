@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sorting</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script src="../libs/prop-types.js"></script>
+    <script type="text/babel">
+      function clone(o) {
+        return JSON.parse(JSON.stringify(o));
+      }
+
+      Excel.propTypes = {
+        headers: PropTypes.arrayOf(PropTypes.string),
+        initialData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+      };
+
+      const headers = ["Book", "Author", "Language", "Published", "Sales"];
+
+      const data = [
+        [
+          "A Tale of Two Cities",
+          "Charles Dickens",
+          "English",
+          "1859",
+          "200 million",
+        ],
+        [
+          "Le Petit Prince (The Little Prince)",
+          "Antoine de Saint-Exupéry",
+          "French",
+          "1943",
+          "150 million",
+        ],
+        [
+          "Harry Potter and the Philosopher's Stone",
+          "J. K. Rowling",
+          "English",
+          "1997",
+          "120 million",
+        ],
+        [
+          "And Then There Were None",
+          "Agatha Christie",
+          "English",
+          "1939",
+          "100 million",
+        ],
+        [
+          "Dream of the Red Chamber",
+          "Cao Xueqin",
+          "Chinese",
+          "1791",
+          "100 million",
+        ],
+        ["The Hobbit", "J. R. R. Tolkien", "English", "1937", "100 million"],
+      ];
+
+      ReactDOM.render(
+        <Excel headers={headers} initialData={data} />,
+        document.getElementById("app")
+      );
+
+      /*
+      React has your back when it comes to performance and updating the UI by: 
+      • Touching the DOM lightly 
+      • Using event delegation for user interactions
+      */
+    </script>
+  </body>
+</html>
