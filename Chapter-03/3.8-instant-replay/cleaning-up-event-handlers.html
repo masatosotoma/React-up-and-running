@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cleaning up event handlers</title>
+    <title>Hello React</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script>
+      /* The replay feature needs a bit of cleanup.
+      When this component is the only thing happening on the page, cleanup isn’t necessary; in a real application,
+      components get added and removed from the DOM more frequently.
+      When removing from the DOM a “good citizen” component should clean up after itself.
+      In the example above there are two items that need cleaning up: the keydown event listener and the replay interval callback.*/
+
+      /*Because it’s using this, the whole Excel instance needs to be retained in memory.
+      This is in effect a memory leak. Too many of those and the user may run out of memory and your application may crash the browser tab.*/
+      /* The callback will also attempt to call setState() on a non-existing component (which React handles gracefully by giving you a warning).*/
+
+      ReactDOM.render(
+        React.createElement("h1", null, "Hello world"),
+        document.getElementById("app")
+      );
+      
+      const interval = setInterval(() => {
+        console.log(Date.now());
+      }, 1000);
+    </script>
+  </body>
+</html>
