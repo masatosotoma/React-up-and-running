@@ -10,16 +10,44 @@
     <script src="../libs/react.js"></script>
     <script src="../libs/react-dom.js"></script>
     <script>
-      /* Taking care of these memory leaks is fairly straightforward. You need to keep references
- to the handlers and intervals/timeouts you want to clean up. Then clean them
- up in componentWillUnmount().
- For the event handler, have it as a class method, as opposed to an inline function:*/
+      /* Taking care of these memory leaks is fairly straightforward.
+            You need to keep references to the handlers and intervals/timeouts you want to clean up.
+            Then clean them up in componentWillUnmount(). For the event handler, have it as a class method, as opposed to an inline function:*/
 
       function keydownHandler(e) {
         if (e.altKey && e.shiftKey && e.keyCode === 82) {
           //ALT+SHIFT+R(eplay)
           this.replay();
         }
+      }
+
+      //Then componentDidMount() becomes the simpler:
+
+      function componentDidMount() {
+        document.addEventListener("keydown", this.keydownHandler);
+      }
+
+      /*For the interval replay ID, have it as a class property as opposed to a local variable:*/
+      this.replay = setInterval(() => {
+        if (++idx === this.log.length - 1) {
+          // the end
+          clearInterval(this.replayID);
+        }
+        this.setState(this.log[idx]);
+      }, 1000);
+
+      //You need to, of course, bind the new method and add the new property in the constructor:
+      function constructor(props) {
+        // ...
+        this.replayID = null;
+        // ...
+        this.keydownHandler = this.keydownHandler.bind(this);
+      }
+
+      //the cleanup in the componentWillUnmount():
+      function componentWillUnmount() {
+        document.removeEventListener("keydown", this.keydownHandler);
+        clearInterval(this.replayID);
       }
     </script>
   </body>
