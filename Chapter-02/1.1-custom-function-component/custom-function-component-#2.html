@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Class Component</title>
+    <meta charset="utf-8"
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script>
+      const MyComponent = function () {
+        return React.createElement("span", null, "I am a custom component");
+      };
+      ReactDOM.render(MyComponent(), document.getElementById("app"));
+    </script>
+  </body>
+</html>
