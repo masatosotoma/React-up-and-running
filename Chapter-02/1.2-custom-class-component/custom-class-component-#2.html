@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Class Component</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src=".../libs/react.js"></script>
+    <script src=".../libs/react-dom.js"></script>
+    <script src=".../libs/babel.js"></script>
+    <script text="babel">
+      class MyComponent extends React.Component {
+        render() {
+          return React.createElement("span", null, "Custom Class Component");
+        }
+      }
+      ReactDOM.render(<MyComponent />, document.getElementById("app"));
+    </script>
+  </body>
+</html>
