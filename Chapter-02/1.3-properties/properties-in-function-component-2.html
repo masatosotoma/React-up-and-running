@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Class Component</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      const MyComponent = function ({ name, job }) {
+        return (
+          <span>
+            My name is{" "}
+            <em>
+              {name},the {job}
+            </em>
+          </span>
+        );
+      };
+      ReactDOM.render(
+        <MyComponent name="bob" job="engineer" />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
