@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Default Properties #2 for Function component</title>
+    <title>Statefull Textarea Component #2</title>
     <meta charset="utf-8" />
   </head>
   <body>
@@ -12,11 +12,21 @@
     <script src="../libs/babel.js"></script>
     <script type="text/babel">
       class TextAreaCounter extends React.Component {
+        constructor() {
+          super();
+          this.state = {};
+          this.onTextChange = this.onTextChange.bind(this); //Add event handling to the constructor with bind method
+        }
+        onTextChange(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
         render() {
-          const text = this.props.text;
+          const text = "text" in this.state ? this.state.text : this.props.text;
           return (
             <div>
-              <textarea defaultValue={text} />
+              <textarea value={text} onChange={this.onTextChange} />
               <h3>{text.length}</h3>
             </div>
           );
