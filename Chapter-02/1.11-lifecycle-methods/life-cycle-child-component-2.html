@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Statefull Textarea Component #2</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class LifecycleLoggerComponent extends React.Compnent {
+        static getName() {}
+        componentDidMount() {
+          console.log(this.constructor.getName() + "::componentDidMount");
+        }
+        componentWillUnmount() {
+          console.log(this.constructor.getName() + "::componentWillUnmount");
+        }
+        componentDidUpdate(prevProps, prevState, snapshot) {
+          console.log(this.constructor.getName() + "::componentDidUpdate");
+        }
+      }
+      class Counter extends LifecycleLoggerComponent {
+        static getName() {
+          return "Counter";
+        }
+        render() {
+          return <h3>{this.props.count}</h3>;
+        }
+      }
+      Counter.defaultProps = {
+        count: 0,
+      };
+      class TextAreaCounter extends Counter{
+        static getName(){
+          return "TextAreaCounter"
+        }
+      }
+    </script>
+  </body>
+</html>
