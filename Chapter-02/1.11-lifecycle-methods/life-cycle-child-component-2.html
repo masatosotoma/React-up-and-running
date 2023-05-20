@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Statefull Textarea Component #2</title>
+    <title>Life Cycle Child Component #2</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="00.normal.css" />
   </head>
   <body>
     <div id="app"></div>
@@ -11,7 +12,7 @@
     <script src="../libs/react-dom.js"></script>
     <script src="../libs/babel.js"></script>
     <script type="text/babel">
-      class LifecycleLoggerComponent extends React.Compnent {
+      class LifecycleLoggerComponent extends React.Component {
         static getName() {}
         componentDidMount() {
           console.log(this.constructor.getName() + "::componentDidMount");
@@ -23,6 +24,7 @@
           console.log(this.constructor.getName() + "::componentDidUpdate");
         }
       }
+
       class Counter extends LifecycleLoggerComponent {
         static getName() {
           return "Counter";
@@ -34,25 +36,41 @@
       Counter.defaultProps = {
         count: 0,
       };
-      
-      class TextAreaCounter extends Counter {
+
+      class TextAreaCounter extends LifecycleLoggerComponent {
         static getName() {
           return "TextAreaCounter";
         }
+        constructor() {
+          super();
+          this.state = {};
+          this.onTextChange = this.onTextChange.bind(this);
+        }
+
+        onTextChange(event) {
+          this.setState({
+            text: event.target.value,
+          });
+        }
+
         render() {
           const text = "text" in this.state ? this.state.text : this.props.text;
-          let counter = null;
-          if (text.length > 0) {
-            counter = <Counter counter={this.length} />;
-          }
           return (
             <div>
               <textarea value={text} onChange={this.onTextChange} />
-              {counter}
+              {text.length > 0 ? <Counter count={text.length} /> : null}
             </div>
           );
         }
       }
+      TextAreaCounter.defaultProps = {
+        text: "Count me as I type",
+      };
+
+      const myTextAreaCounter = ReactDOM.render(
+        <TextAreaCounter text="Bob" />,
+        document.getElementById("app")
+      );
     </script>
   </body>
 </html>
