@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Table Headers with Key</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../styles/table.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+
+    <script src="../libs/babel.js"></script>
+    <script type="text/babel">
+      class Excel extends React.Component {
+        render() {
+          const headers = [];
+          for (const idx in this.props.headers) {
+            const title = this.props.headers[idx];
+            headers.push(<th key={idx}>{title}</th>);
+          }
+          return (
+            <table>
+              <thead>
+                <tr>
+                  {headers}
+                </tr>
+              </thead>
+            </table>
+          );
+        }
+      }
+      const headers = ["Book", "Author", "Language", "Published", "Sales"];
+
+      ReactDOM.render(
+        <Excel headers={headers} />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
