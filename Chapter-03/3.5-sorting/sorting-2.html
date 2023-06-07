@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Prop Type #2</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../styles/table.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script src="../libs/prop-types.js"></script>
+    <script type="text/babel">
+      class Excel extends React.Component {
+        constructor(props) {
+          super();
+          this.state = { data: props.initialData };
+          this.sort = this.sort.bind(this);
+        }
+        sort(e) {}
+        
+        function clone(o) {
+            return JSON.parse(JSON.stringify)
+        }
+        render() {
+          return (
+            <table>
+              <thead onClick={thi.sort}>
+                <tr>
+                  {this.props.headers.map((title, idx) => (
+                    <th key={idx}>{title}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.data.map((row, idx) => (
+                  <tr key={idx}>
+                    {row.map((cell, idx) => (
+                      <td key={idx}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          );
+        }
+      }
+
+      Excel.propTypes = {
+        headers: PropTypes.arrayOf(PropTypes.string),
+        initialData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+      };
+
+      const headers = [0, "Author", "Language", "Published", "Sales"];
+      const data = [
+        [
+          "A Tale of Two Cities",
+          "Charles Dickens",
+          "English",
+          "1859",
+          "200 million",
+        ],
+      ];
+      ReactDOM.render(
+        <Excel headers={headers} initialData={data} />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
