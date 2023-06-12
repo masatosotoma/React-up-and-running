@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sort UI Cues #2</title>
+    <title>Editing data #2</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="../styles/table.css" />
   </head>
@@ -23,6 +23,7 @@
             data: props.initialData,
             sortby: null,
             descending: false,
+            edit: null,
           };
           this.sort = this.sort.bind(this);
           this.showEditor = this.showEditor.bind(this);
@@ -55,8 +56,16 @@
               column: e.target.cellIndex,
             },
           });
-          console.log(row);
-          console.log(column);
+        }
+        save(e) {
+          e.preventDefault();
+          const input = e.target.firstChild;
+          const data = clone(this.state.data);
+          data[this.state.edit.row][this.state.edit.column] = input.value;
+          this.setState({
+            edit: null,
+            data,
+          });
         }
 
         render() {
@@ -73,11 +82,23 @@
                 </tr>
               </thead>
               <tbody onDoubleClick={this.showEditor}>
-                {this.state.data.map((row, idx) => (
-                  <tr key={idx}>
-                    {row.map((cell, idx) => (
-                      <td key={idx}>{cell}</td>
-                    ))}
+                {this.state.data.map((row, rowidx) => (
+                  <tr key={rowidx} data-row={rowidx}>
+                    {row.map((cell, columnidx) => {
+                      const edit = this.state.edut;
+                      if (
+                        edit &&
+                        edit.row === rowidx &&
+                        edit.column === columnidx
+                      ) {
+                        cell = (
+                          <form onSubmit={this.save}>
+                            <input type="text" defaultValue={cell} />
+                          </form>
+                        );
+                      }
+                      return <td key={columnidx}>{cell}</td>;
+                    })}
                   </tr>
                 ))}
               </tbody>
