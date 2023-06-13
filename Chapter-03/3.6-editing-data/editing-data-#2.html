@@ -85,7 +85,7 @@
                 {this.state.data.map((row, rowidx) => (
                   <tr key={rowidx} data-row={rowidx}>
                     {row.map((cell, columnidx) => {
-                      const edit = this.state.edut;
+                      const edit = this.state.edit;
                       if (
                         edit &&
                         edit.row === rowidx &&
