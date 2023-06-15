@@ -81,6 +81,10 @@
 
               render() {
                 return (
+                <div>
+                    <button classsName="toolbar"   onClick={this.toggleSearch}>
+                      {this.state.search ? 'Hide Search' : 'Show search'}
+                    </button>
                   <table>
                     <thead onClick={this.sort}>
                       <tr>
@@ -121,6 +125,7 @@
                       )}
                     </tbody>
                   </table>
+                </div>
                 );
               }
             }
