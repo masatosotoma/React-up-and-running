@@ -73,7 +73,18 @@
             data,
           });
         }
-        toggleSearch(e){}
+        toggleSearch(e){
+            if(this.state.search){
+                this.setState({
+                    data: this.preSearchData,
+                    search: false
+                });
+                this.preSearchData = null;}else{this.preSearchData = this.state.data;
+                this.setState({
+                    search: true,
+                })}
+            }
+        }
         search(e){
 
         }
@@ -107,6 +118,7 @@
                 </tr>
               </thead>
               <tbody onDoubleClick={this.showEditor}>
+                {searchRow}
                 {this.state.data.map((row, rowidx) => {
                     const recordId = row[row.length -1];
                     return(
