@@ -86,7 +86,16 @@
             }
         }
         search(e){
-
+            const needle = e.target.value.toLowerCase();
+            if(!needle){
+                this.setState({data: this.preSearchData});
+                return;
+            }
+            const idx = e.target.dataset.idx;
+            const searchdata = this.preSearchData.filter((row)=>{
+                return row[idx].toString().toLowerCase().indexOf(needle) > -1;
+            });
+            this.setState({data: searchdata});
         }
 
 
@@ -150,7 +159,7 @@
           </div>
           );
         }
-      }
+      
 
       Excel.propTypes = {
         headers: PropTypes.arrayOf(PropTypes.string),
