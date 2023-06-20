@@ -19,7 +19,9 @@
       class Excel extends React.Component {
         constructor(props) {
           super();
-          const data = close(props.initialData).map((row,idx)=row.concat(idx),);
+          const data = close(props.initialData).map((row, idx) =>
+            row.concat(idx)
+          );
           this.state = {
             data: props.initialData,
             sortby: null,
@@ -66,100 +68,107 @@
         save(e) {
           e.preventDefault();
           const input = e.target.firstChild;
-          const data = clone(this.state.data);
-          data[this.state.edit.row][this.state.edit.column] = input.value;
-          this.setState({
+          const data = clone(this.state.data).map((row) => {
+            if (row[row.length - 1] === this.state.edit.row) {
+              row[this.sate.edit.column] = input.value;
+            }
+            return row;
+          });
+          this.logSetState({
             edit: null,
             data,
           });
         }
-        toggleSearch(e){
-            if(this.state.search){
-                this.setState({
-                    data: this.preSearchData,
-                    search: false
-                });
-                this.preSearchData = null;}else{this.preSearchData = this.state.data;
-                this.setState({
-                    search: true,
-                })}
-            }
-        }
-        search(e){
-            const needle = e.target.value.toLowerCase();
-            if(!needle){
-                this.setState({data: this.preSearchData});
-                return;
-            }
-            const idx = e.target.dataset.idx;
-            const searchdata = this.preSearchData.filter((row)=>{
-                return row[idx].toString().toLowerCase().indexOf(needle) > -1;
+        toggleSearch() {
+          if (this.state.search) {
+            this.setState({
+              data: this.preSearchData,
+              search: false,
             });
-            this.setState({data: searchdata});
+            this.preSearchData = null;
+          } else {
+            this.preSearchData = this.state.data;
+            this.setState({
+              search: true,
+            });
+          }
         }
 
+        search(e) {
+          const needle = e.target.value.toLowerCase();
+
+          if (!needle) {
+            this.setState({ data: this.preSearchData });
+            return;
+          }
+          const idx = e.target.dataset.idx;
+          const searchdata = this.preSearchData.filter((row) => {
+            return row[idx].toString().toLowerCase().indexOf(needle) > -1;
+          });
+          this.setState({ data: searchdata });
+        }
 
         render() {
           const searchRow = !this.state.search ? null : (
-              <tr onChange={this.search}>
-                  {this.props.headers.map((_,idx)=>(
-                      <td key={idx}>
-                          <input type="text" data-idx={idx} /></td>
-                  ))}
-                  </tr>
-          )
+            <tr onChange={this.search}>
+              {this.props.headers.map((_, idx) => (
+                <td key={idx}>
+                  <input type="text" data-idx={idx} />
+                </td>
+              ))}
+            </tr>
+          );
           return (
-          <div>
+            <div>
               <div classsName="toolbar">
-              <button onClick={this.toggleSearch}>
-                {this.state.search ? 'Hide Search' : 'Show search'}
-              </button>
+                <button onClick={this.toggleSearch}>
+                  {this.state.search ? "Hide Search" : "Show search"}
+                </button>
               </div>
-            <table>
-              <thead onClick={this.sort}>
-                <tr>
-                  {this.props.headers.map((title, idx) => {
-                    if (this.state.sortby === idx) {
-                      title += this.state.descending ? " \u2191" : " \u2193";
-                    }
-                    return <th key={idx}>{title}</th>;
-                  })}
-                </tr>
-              </thead>
-              <tbody onDoubleClick={this.showEditor}>
-                {searchRow}
-                {this.state.data.map((row, rowidx) => {
-                    const recordId = row[row.length -1];
-                    return(
-                      <tr key={recordId} data-row={recordId}>
-                    {row.map((cell, columnidx) => {
-                      if(columnidx === this.props.headers.length){
-                          return;
+              <table>
+                <thead onClick={this.sort}>
+                  <tr>
+                    {this.props.headers.map((title, idx) => {
+                      if (this.state.sortby === idx) {
+                        title += this.state.descending ? " \u2191" : " \u2193";
                       }
-                      const edit = this.state.edit;
-                      if (
-                        edit &&
-                        edit.row === rowidx &&
-                        edit.column === columnidx
-                      ) {
-                        cell = (
-                          <form onSubmit={this.save}>
-                            <input type="text" defaultValue={cell} />
-                          </form>
-                        );
-                      }
-                      return <td key={columnidx}>{cell}</td>;
+                      return <th key={idx}>{title}</th>;
                     })}
                   </tr>
-                      )
-                }
-                )}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody onDoubleClick={this.showEditor}>
+                  {searchRow}
+                  {this.state.data.map((row, rowidx) => {
+                    const recordId = row[row.length - 1];
+                    return (
+                      <tr key={recordId} data-row={recordId}>
+                        {row.map((cell, columnidx) => {
+                          if (columnidx === this.props.headers.length) {
+                            return;
+                          }
+                          const edit = this.state.edit;
+                          if (
+                            edit &&
+                            edit.row === rowidx &&
+                            edit.column === columnidx
+                          ) {
+                            cell = (
+                              <form onSubmit={this.save}>
+                                <input type="text" defaultValue={cell} />
+                              </form>
+                            );
+                          }
+                          return <td key={columnidx}>{cell}</td>;
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           );
         }
-      
+      }
 
       Excel.propTypes = {
         headers: PropTypes.arrayOf(PropTypes.string),
