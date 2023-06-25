@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Searching data #2</title>
+    <title>Instant replay #2</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="../styles/table.css" />
   </head>
@@ -28,7 +28,8 @@
             descending: false,
             edit: null,
           };
-
+          
+          this.replayID = null;
           this.preSearchData = null;
           this.sort = this.sort.bind(this);
           this.showEditor = this.showEditor.bind(this);
@@ -36,8 +37,27 @@
           this.toggleSearch = this.toggleSearch.bind(this);
           this.search = this.search.bind(this);
           this.log = [clone(this.state)];
-
+          this.reply = this.replay.bind(this);
+          this.logSetState = this.logSetState.bind(this);
+          this.keydownHandler = this.keydownHandler.bind(this)
         }
+
+        keydownHandler(e) {
+          if (e.altKey && e.shiftKey && e.keyCode === 82) {
+            this.replay();
+          }
+        }
+
+        componentDidMount(){
+            document.addEventListener('keydown',this.keydownHandler);
+        }
+
+        componentWillMount(){
+            document.removeEventListener('keydown',this.keydownHandler);
+            clearInterval(this.replayID)
+        }
+
+
         sort(e) {
           const column = e.target.cellIndex;
           const data = clone(this.state.data);
@@ -55,10 +75,10 @@
               ? 1
               : -1;
           });
-          this.setState({ data, sortby: column, descending });
+          this.logSetState({ data, sortby: column, descending });
         }
         showEditor(e) {
-          this.setState({
+          this.logSetState({
             edit: {
               row: parseInt(e.target.parentNode.dataset.row, 10),
               column: e.target.cellIndex,
@@ -81,14 +101,14 @@
         }
         toggleSearch() {
           if (this.state.search) {
-            this.setState({
+            this.logSetState({
               data: this.preSearchData,
               search: false,
             });
             this.preSearchData = null;
           } else {
             this.preSearchData = this.state.data;
-            this.setState({
+            this.logSetState({
               search: true,
             });
           }
@@ -98,14 +118,34 @@
           const needle = e.target.value.toLowerCase();
 
           if (!needle) {
-            this.setState({ data: this.preSearchData });
+            this.logSetState({ data: this.preSearchData });
             return;
           }
           const idx = e.target.dataset.idx;
           const searchdata = this.preSearchData.filter((row) => {
             return row[idx].toString().toLowerCase().indexOf(needle) > -1;
           });
-          this.setState({ data: searchdata });
+          this.logSetState({ data: searchdata });
+        }
+
+        replay() {
+          if (this.log.length === 1) {
+            console.warn("No state changes to replay yet");
+            return;
+          }
+          let idx = -1;
+          const interval = setInterval(() => {
+            if (++idx === this.log.length - 1) {
+              clearInterval(interval);
+            }
+            this.setState(this.log[idx]);
+          }, 1000);
+        }
+
+        logSetState(newState) {
+          this.log.push(clone(newState));
+
+          this.setState(newState);
         }
 
         render() {
