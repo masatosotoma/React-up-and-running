@@ -28,7 +28,7 @@
             descending: false,
             edit: null,
           };
-          
+
           this.replayID = null;
           this.preSearchData = null;
           this.sort = this.sort.bind(this);
@@ -39,7 +39,7 @@
           this.log = [clone(this.state)];
           this.reply = this.replay.bind(this);
           this.logSetState = this.logSetState.bind(this);
-          this.keydownHandler = this.keydownHandler.bind(this)
+          this.keydownHandler = this.keydownHandler.bind(this);
         }
 
         keydownHandler(e) {
@@ -48,15 +48,14 @@
           }
         }
 
-        componentDidMount(){
-            document.addEventListener('keydown',this.keydownHandler);
+        componentDidMount() {
+          document.addEventListener("keydown", this.keydownHandler);
         }
 
-        componentWillMount(){
-            document.removeEventListener('keydown',this.keydownHandler);
-            clearInterval(this.replayID)
+        componentWillMount() {
+          document.removeEventListener("keydown", this.keydownHandler);
+          clearInterval(this.replayID);
         }
-
 
         sort(e) {
           const column = e.target.cellIndex;
@@ -164,6 +163,12 @@
                 <button onClick={this.toggleSearch}>
                   {this.state.search ? "Hide Search" : "Show search"}
                 </button>
+                <a href="data.json" onClick={this.downloadJSON}>
+                  Export JSON
+                </a>
+                <a href="data.csv" onClick={this.downloadCSV}>
+                  Export csv
+                </a>
               </div>
               <table>
                 <thead onClick={this.sort}>
