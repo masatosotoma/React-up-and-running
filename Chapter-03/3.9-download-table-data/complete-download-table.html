@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Instant replay #2</title>
+    <title>Download Table</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="../styles/table.css" />
   </head>
@@ -40,6 +40,8 @@
           this.reply = this.replay.bind(this);
           this.logSetState = this.logSetState.bind(this);
           this.keydownHandler = this.keydownHandler.bind(this);
+          this.downloadJSON = this.download.bind(this, "json");
+          this.downloadCSV = this.download.bind(this, "csv");
         }
 
         keydownHandler(e) {
@@ -147,6 +149,25 @@
           this.setState(newState);
         }
 
+        download(format, ev) {
+          const data = clone(this.state.data).map((row) => {
+            return (
+              result +
+              row.reduce((rowcontent, cellcontent, idx) => {
+                const cell = cellcontent.replace(/"/g, '""');
+                const delimiter = idx < row.length - 1 ? "," : "";
+                return `${rowcontent}"${cellcontent}"${delimiter}`;
+              }, "") +
+              "\n"
+            );
+          }, "");
+
+          const URL = window.URL || window.webkitURL;
+          const blob = new Blob([contents], { type: "text/" + format });
+          ev.target.href = URL.createObjectURL(blob);
+          ev.target.download = "data." + format;
+        }
+
         render() {
           const searchRow = !this.state.search ? null : (
             <tr onChange={this.search}>
@@ -167,7 +188,7 @@
                   Export JSON
                 </a>
                 <a href="data.csv" onClick={this.downloadCSV}>
-                  Export csv
+                  Export CSV
                 </a>
               </div>
               <table>
