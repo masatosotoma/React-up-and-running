@@ -202,34 +202,44 @@
                     })}
                   </tr>
                 </thead>
-                <tbody onDoubleClick={this.showEditor}>
-                  {searchRow}
-                  {this.state.data.map((row, rowidx) => {
-                    const recordId = row[row.length - 1];
-                    return (
-                      <tr key={recordId} data-row={recordId}>
-                        {row.map((cell, columnidx) => {
-                          if (columnidx === this.props.headers.length) {
-                            return;
-                          }
-                          const edit = this.state.edit;
-                          if (
-                            edit &&
-                            edit.row === recordId &&
-                            edit.column === columnidx
-                          ) {
-                            cell = (
-                              <form onSubmit={this.save}>
-                                <input type="text" defaultValue={cell} />
-                              </form>
-                            );
-                          }
-                          return <td key={columnidx}>{cell}</td>;
-                        })}
-                      </tr>
-                    );
-                  })}
-                </tbody>
+                {this.state.data.length === 0 ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan={this.props.headers.length}>
+                        Loading data...
+                      </td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody onDoubleClick={this.showEditor}>
+                    {searchRow}
+                    {this.state.data.map((row, rowidx) => {
+                      const recordId = row[row.length - 1];
+                      return (
+                        <tr key={recordId} data-row={recordId}>
+                          {row.map((cell, columnidx) => {
+                            if (columnidx === this.props.headers.length) {
+                              return;
+                            }
+                            const edit = this.state.edit;
+                            if (
+                              edit &&
+                              edit.row === recordId &&
+                              edit.column === columnidx
+                            ) {
+                              cell = (
+                                <form onSubmit={this.save}>
+                                  <input type="text" defaultValue={cell} />
+                                </form>
+                              );
+                            }
+                            return <td key={columnidx}>{cell}</td>;
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                )}
               </table>
             </div>
           );
@@ -283,7 +293,7 @@
       ];
 
       ReactDOM.render(
-        <Excel headers={headers} initialData={data} />,
+        <Excel headers={headers} initialData={[]} />,
         document.getElementById("app")
       );
     </script>
