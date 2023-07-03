@@ -52,6 +52,15 @@
 
         componentDidMount() {
           document.addEventListener("keydown", this.keydownHandler);
+          fetch("https://www.phpied.com/files/reactbook/table-data.json")
+            .then((response) => response.json())
+            .then((initialData) => {
+              const data = clone(initialData).map((row, idx) => {
+                row.push(idx);
+                return row;
+              });
+              this.setState({ data });
+            });
         }
 
         componentWillMount() {
