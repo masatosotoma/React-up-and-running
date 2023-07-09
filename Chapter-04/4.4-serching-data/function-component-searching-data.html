@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Searching Data</title>
+    <title>Functional Component Searching Data</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="../styles/table.css" />
   </head>
@@ -21,8 +21,10 @@
 
         const [edit, setEdit] = React.useState(null);
 
-        const [search, setSearch] = useState(false);
-        const [preSearchData, setPreSearchData] = useState(null);
+        //The boolean search to signify whether the user is filtering or just looking at the data
+        //The copy of data as preSearchData, because now data becomes a filtered subset of all data
+        const [search, setSearch] = React.useState(false);
+        const [preSearchData, setPreSearchData] = React.useState(null);
 
         function clone(o) {
           return JSON.parse(JSON.stringify(o));
@@ -66,40 +68,82 @@
           setData(dataCopy);
         }
 
-        return (
-          <table>
-            <thead onClick={sort}>
-              <tr>
-                {headers.map((title, idx) => {
-                  if (sorting.column === idx) {
-                    title += sorting.descending ? " \u2191" : " \u2193";
-                  }
-                  return <th key={idx}>{title}</th>;
-                })}
-              </tr>
-            </thead>
+        function toggleSearch() {
+          if (search) {
+            setData(preSearchData);
+            setSearch(false);
+            setPreSearchData(null);
+          } else {
+            setPreSearchData(data);
+            setSearch(true);
+          }
+        }
 
-            <tbody onDoubleClick={showEditor}>
-              {data.map((row, rowidx) => (
-                <tr key={rowidx} data-row={rowidx}>
-                  {row.map((cell, columnidx) => {
-                    if (
-                      edit &&
-                      edit.row === rowidx &&
-                      edit.column === columnidx
-                    ) {
-                      cell = (
-                        <form onSubmit={save}>
-                          <input type="text" defaultValue={cell} />
-                        </form>
-                      );
+        function filter(e) {
+          const needle = e.target.value.toLowerCase();
+          if (!needle) {
+            setData(preSearchData);
+            return;
+          }
+          const idx = e.target.dataset.idx;
+          const searchdata = preSearchData.filter((row) => {
+            return row[idx].toString().toLowerCase().indexOf(needle) > -1;
+          });
+          setData(searchdata);
+        }
+
+        const searchRow = !search ? null : (
+          <tr onChange={filter}>
+            {headers.map((_, idx) => (
+              <td key={idx}>
+                <input type="text" data-idx={idx} />
+              </td>
+            ))}
+          </tr>
+        );
+
+        return (
+          <div>
+            <div className="toolbar">
+              <button onClick={toggleSearch}>
+                {search ? "Hide Search" : "Show search"}
+              </button>
+            </div>
+            <table>
+              <thead onClick={sort}>
+                <tr>
+                  {headers.map((title, idx) => {
+                    if (sorting.column === idx) {
+                      title += sorting.descending ? " \u2191" : " \u2193";
                     }
-                    return <td key={columnidx}>{cell}</td>;
+                    return <th key={idx}>{title}</th>;
                   })}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody onDoubleClick={showEditor}>
+                {searchRow}
+                {data.map((row, rowidx) => (
+                  <tr key={rowidx} data-row={rowidx}>
+                    {row.map((cell, columnidx) => {
+                      if (
+                        edit &&
+                        edit.row === rowidx &&
+                        edit.column === columnidx
+                      ) {
+                        cell = (
+                          <form onSubmit={save}>
+                            <input type="text" defaultValue={cell} />
+                          </form>
+                        );
+                      }
+                      return <td key={columnidx}>{cell}</td>;
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         );
       }
 
