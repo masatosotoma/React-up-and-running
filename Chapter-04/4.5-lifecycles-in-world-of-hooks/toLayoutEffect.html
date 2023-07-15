@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Functional Lifecycles</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../styles/table.css" />
+    <style></style>
+  </head>
+  <body>
+    <!--useLayoutEffect() works like useEffect(), 
+    the only difference being that it’s invoked before React is done painting all the DOM nodes of a render-->
+    <div id="app">
+      <!-- my app renders here -->
+    </div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script src="../libs/prop-types.js"></script>
+    <script type="text/babel">
+      const { useState, useEffect, useLayoutEffect } = React;
+
+      function Example({ layout }) {
+        if (layout === null) {
+          return null;
+        }
+
+        if (layout) {
+          useLayoutEffect(() => {
+            const table = document.getElementsByTagName("table")[0];
+            console.log(table.offsetWidth);
+            table.width = "250px";
+          }, []);
+        } else {
+          useEffect(() => {
+            const table = document.getElementsByTagName("table")[0];
+            console.log(table.offsetWidth);
+            table.width = "250px";
+          }, []);
+        }
+
+        return (
+          <table>
+            <thead>
+              <tr>
+                <th>Random</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from(Array(10000)).map((_, idx) => (
+                <tr key={idx}>
+                  <td width={Math.random() * 800}>{Math.random()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        );
+      }
+
+      function ExampleParent() {
+        const [layout, setLayout] = useState(null);
+        return (
+          <div>
+            <button onClick={() => setLayout(false)}>useEffect</button>{" "}
+            <button onClick={() => setLayout(true)}>useLayoutEffect</button>{" "}
+            <button onClick={() => setLayout(null)}>clear</button>
+            <Example layout={layout} />
+          </div>
+        );
+      }
+
+      ReactDOM.render(<ExampleParent />, document.getElementById("app"));
+    </script>
+  </body>
+</html>
