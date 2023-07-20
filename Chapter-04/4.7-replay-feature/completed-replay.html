@@ -16,6 +16,9 @@
         return JSON.parse(JSON.stringify(o));
       }
 
+      const useState = React.useState;
+      const useEffect = React.useEffect;
+
       let dataLog = [];
       let auxLog = [];
       let isReplaying = false;
@@ -33,7 +36,7 @@
               fn(data);
             });
           idx++;
-          if (idx > dataLog.length) {
+          if (idx > dataLog.length - 1) {
             isReplaying = false;
             clearInterval(replayID);
             return;
@@ -49,13 +52,13 @@
             return;
           }
           if (isData) {
-            dataLog.push(clone(state), setState);
+            dataLog.push([clone(state), setState]);
           } else {
             const idx = dataLog.length - 1;
             if (!auxLog[idx]) {
               auxLog[idx] = [];
             }
-            auxLog[idx.push([state, setState])];
+            auxLog[idx].push([state, setState]);
           }
         }, [state]);
 
@@ -63,11 +66,15 @@
       }
 
       function Excel({ headers, initialData }) {
-        const [data, setData] = React.useLoggedState(initialData);
-        const [sorting, setSorting] = React.useLoggedState({
+        const [data, setData] = useLoggedState(initialData, true);
+        const [sorting, setSorting] = useLoggedState({
           column: null,
           descending: false,
         });
+
+        const [edit, setEdit] = useLoggedState(null);
+        const [search, setSearch] = useLoggedState(false);
+        const [preSearchData, setPreSearchData] = useLoggedState(null);
 
         useEffect(() => {
           function keydownHandler(e) {
@@ -83,11 +90,7 @@
             dataLog = [];
             auxLog = [];
           };
-        });
-
-        const [edit, setEdit] = React.useLoggedState(null);
-        const [search, setSearch] = React.useLoggedState(false);
-        const [preSearchData, setPreSearchData] = React.useLoggedState(null);
+        }, []);
 
         function sort(e) {
           const column = e.target.cellIndex;
@@ -185,6 +188,7 @@
                 {data.map((row, rowidx) => (
                   <tr key={rowidx} data-row={rowidx}>
                     {row.map((cell, columnidx) => {
+                      console.log(`Rendering ${rowidx}x${columnidx}`);
                       if (
                         edit &&
                         edit.row === rowidx &&
