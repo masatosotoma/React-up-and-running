@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Functional Component Replay</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../styles/table.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script src="../libs/prop-types.js"></script>
+    <script type="text/babel">
+      function RandomData() {
+        const [state, dispatch] = useReducer(myReducer, initialState);
+        return (
+          <div>
+            <div className="toolbar">
+              <button onClick={() => dispatch({ type: "newdata" })}>
+                Get data
+              </button>{" "}
+              <button
+                onClick={() =>
+                  dispatch({ type: "recolor", payload: { what: "color" } })
+                }
+              >
+                Recolor text
+              </button>{" "}
+              <button
+                onClick={() =>
+                  dispatch({ type: "recolor", payload: { what: "background" } })
+                }
+              >
+                Recolor background
+              </button>
+            </div>
+            <table style={{ color, background }}>
+              <tbody>
+                {data.map((row, idx) => (
+                  <tr key={idx}>
+                    {row.map((cell, idx) => (
+                      <td key={idx}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+
+      RandomData.propTypes = {
+        headers: PropTypes.arrayOf(PropTypes.string),
+        initialData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+      };
+
+      const initialState = { data: [], color: "black", background: "white" };
+
+      ReactDOM.render(
+        <RandomData initialState={data} />,
+        document.getElementById("app")
+      );
+    </script>
+  </body>
+</html>
