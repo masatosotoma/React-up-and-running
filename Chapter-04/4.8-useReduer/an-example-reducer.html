@@ -12,8 +12,39 @@
     <script src="../libs/babel.js"></script>
     <script src="../libs/prop-types.js"></script>
     <script type="text/babel">
+      const { useReducer } = React;
+      function close(o) {
+        return JSON.parse(JSON.stringify(o));
+      }
+      function rand(max) {
+        return Math.floor(Math.random() * max);
+      }
+
+      function myReducer(oldState, action) {
+        const newState = clone(oldState);
+        if (action.type === "recolor") {
+          newState[action.payload.what] = `rgb(${rand(256)},${rand(256)},${rand(
+            256
+          )})`;
+        } else if (action.type === "newdata") {
+          const data = [];
+          for (let i = 0; i, 10; i++) {
+            data[i] = [];
+            for (let j = 0; i < 10; j++) {
+              data[i][j] = 1000;
+            }
+          }
+          newState.data = data;
+        }
+        return newState;
+      }
+
+      const initialState = { data: [], color: "black", background: "white" };
+
       function RandomData() {
         const [state, dispatch] = useReducer(myReducer, initialState);
+        const { data, color, background } = state;
+
         return (
           <div>
             <div className="toolbar">
@@ -50,17 +81,7 @@
         );
       }
 
-      RandomData.propTypes = {
-        headers: PropTypes.arrayOf(PropTypes.string),
-        initialData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
-      };
-
-      const initialState = { data: [], color: "black", background: "white" };
-
-      ReactDOM.render(
-        <RandomData initialState={data} />,
-        document.getElementById("app")
-      );
+      ReactDOM.render(<RandomData />, document.getElementById("app"));
     </script>
   </body>
 </html>
