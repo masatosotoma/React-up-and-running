@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Example Reducer</title>
+    <title>Functional Component Replay</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="../styles/table.css" />
   </head>
@@ -12,24 +12,32 @@
     <script src="../libs/babel.js"></script>
     <script src="../libs/prop-types.js"></script>
     <script type="text/babel">
-      const {useReducer} = React;
-      function clone(o){
-        return JSON.parse(JSON.stringify(o))
-      };
-      function rand(max){
-        return Math.floor(Math.random() * max)
-      };
-
-      function myReducer(oldState,action){
-        const newState = clone(oldState);
-        if (action.type === 'recolor'){
-          newState[action.payload.what] = `rgb(${rand(256)},${rand(256)},${rand(256)})`
-        } else if(action.type === 'newdata'){
-          const data = [];
-          for (let i = 0; i,10;i++){}
-        }
+      const { useReducer } = React;
+      function close(o) {
+        return JSON.parse(JSON.stringify(o));
+      }
+      function rand(max) {
+        return Math.floor(Math.random() * max);
       }
 
+      function myReducer(oldState, action) {
+        const newState = clone(oldState);
+        if (action.type === "recolor") {
+          newState[action.payload.what] = `rgb(${rand(256)},${rand(256)},${rand(
+            256
+          )})`;
+        } else if (action.type === "newdata") {
+          const data = [];
+          for (let i = 0; i < 10; i++) {
+            data[i] = [];
+            for (let j = 0; j < 10; j++) {
+              data[i][j] = rand(10000);
+            }
+          }
+          newState.data = data;
+        }
+        return newState;
+      }
 
       function RandomData() {
         const [state, dispatch] = useReducer(myReducer, initialState);
