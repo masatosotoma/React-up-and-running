@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Functional Component Replay</title>
+    <title>Functional Component with Reducer</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="../styles/table.css" />
   </head>
@@ -15,90 +15,13 @@
       function clone(o) {
         return JSON.parse(JSON.stringify(o));
       }
+      const { useState, useReducer } = React;
 
-      const useState = React.useState;
-      const useEffect = React.useEffect;
-
-      let dataLog = [];
-      let auxLog = [];
-      let isReplaying = false;
-      let replayID = null;
-
-      function replay() {
-        isReplaying = true;
-        let idx = 0;
-        replayID = setInterval(() => {
-          const [data, fn] = dataLog[idx];
-          fn(data);
-          auxLog[idx] &&
-            auxLog[idx].forEach((log) => {
-              const [data, fn] = log;
-              fn(data);
-            });
-          idx++;
-          if (idx > dataLog.length - 1) {
-            isReplaying = false;
-            clearInterval(replayID);
-            return;
-          }
-        }, 1000);
-      }
-
-      function useLoggedState(initialValue, isData) {
-        const [state, setState] = useState(initialValue);
-
-        useEffect(() => {
-          if (isReplaying) {
-            return;
-          }
-          if (isData) {
-            dataLog.push([clone(state), setState]);
-          } else {
-            const idx = dataLog.length - 1;
-            if (!auxLog[idx]) {
-              auxLog[idx] = [];
-            }
-            auxLog[idx].push([state, setState]);
-          }
-        }, [state]);
-
-        return [state, setState];
-      }
-
-      function Excel({ headers, initialData }) {
-        const [data, setData] = useLoggedState(initialData, true);
-        const [sorting, setSorting] = useLoggedState({
-          column: null,
-          descending: false,
-        });
-
-        const [edit, setEdit] = useLoggedState(null);
-        const [search, setSearch] = useLoggedState(false);
-        const [preSearchData, setPreSearchData] = useLoggedState(null);
-
-        useEffect(() => {
-          function keydownHandler(e) {
-            if (e.altKey && e.shiftKey && e.keyCode === 82) {
-              //ALT+SHIFT+R(eplay)
-              replay();
-            }
-          }
-          document.addEventListener("keydown", keydownHandler);
-          return () => {
-            document.removeEventListener("keydown", keydownHandler);
-            clearInterval(replayID);
-            dataLog = [];
-            auxLog = [];
-          };
-        }, []);
-
-        function sort(e) {
-          const column = e.target.cellIndex;
-          const descending = sorting.column === column && !sorting.descending;
-
-          const dataCopy = clone(data);
-
-          dataCopy.sort((a, b) => {
+      let originalData = null;
+      function reducer(data, action) {
+        if (action.type === "sort") {
+          const { column, descending } = action.payload;
+          return clone(data).sort((a, b) => {
             if (a[column] === b[column]) {
               return 0;
             }
@@ -110,8 +33,45 @@
               ? 1
               : -1;
           });
-          setData(dataCopy);
+        }
+        if (action.type === "save") {
+          data[action.payload.edit.row][action.payload.edit.column] =
+            action.payload.value;
+          return data;
+        }
+        if (action.type === "startSearching") {
+          originalData = data;
+          return originalData;
+        }
+        if (action.type === "doneSearching") {
+          return originalData;
+        }
+        if (action.type === "search") {
+          return originalData.filter((row) => {
+            return (
+              row[action.payload.column]
+                .toString()
+                .toLowerCase()
+                .indexOf(action.payload.needle.toLowerCase()) > -1
+            );
+          });
+        }
+      }
+
+      function Excel({ headers, initialData }) {
+        const [data, dispatch] = useReducer(reducer, initialData);
+        const [sorting, setSorting] = useState({
+          column: null,
+          descending: false,
+        });
+        const [edit, setEdit] = useState(null);
+        const [search, setSearch] = useState(false);
+
+        function sort(e) {
+          const column = e.target.cellIndex;
+          const descending = sorting.column === column && !sorting.descending;
           setSorting({ column, descending });
+          dispatch({ type: "sort", payload: { column, descending } });
         }
 
         function showEditor(e) {
@@ -123,35 +83,38 @@
 
         function save(e) {
           e.preventDefault();
-          const input = e.target.firstChild;
-          const dataCopy = clone(data);
-          dataCopy[edit.row][edit.column] = input.value;
+          const value = e.target.firstChild.value;
+          dispatch({
+            type: "save",
+            payload: {
+              edit,
+              value,
+            },
+          });
           setEdit(null);
-          setData(dataCopy);
         }
 
         function toggleSearch() {
-          if (search) {
-            setData(preSearchData);
-            setSearch(false);
-            setPreSearchData(null);
+          if (!search) {
+            dispatch({
+              type: "startSearching",
+            });
           } else {
-            setPreSearchData(data);
-            setSearch(true);
+            dispatch({
+              type: "doneSearching",
+            });
           }
+          setSearch(!search);
         }
 
         function filter(e) {
-          const needle = e.target.value.toLowerCase();
-          if (!needle) {
-            setData(preSearchData);
-            return;
-          }
-          const idx = e.target.dataset.idx;
-          const searchdata = preSearchData.filter((row) => {
-            return row[idx].toString().toLowerCase().indexOf(needle) > -1;
+          const needle = e.target.value;
+          const column = e.target.dataset.idx;
+          dispatch({
+            type: "search",
+            payload: { needle, column },
           });
-          setData(searchdata);
+          setEdit(null);
         }
 
         const searchRow = !search ? null : (
@@ -168,7 +131,7 @@
           <div>
             <div className="toolbar">
               <button onClick={toggleSearch}>
-                {search ? "Hide Search" : "Show search"}
+                {search ? "Hide search" : "Show search"}
               </button>
             </div>
             <table>
@@ -182,13 +145,11 @@
                   })}
                 </tr>
               </thead>
-
               <tbody onDoubleClick={showEditor}>
                 {searchRow}
                 {data.map((row, rowidx) => (
                   <tr key={rowidx} data-row={rowidx}>
                     {row.map((cell, columnidx) => {
-                      console.log(`Rendering ${rowidx}x${columnidx}`);
                       if (
                         edit &&
                         edit.row === rowidx &&
