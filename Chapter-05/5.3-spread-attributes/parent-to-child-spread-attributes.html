@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>HTML Entries</title>
+    <title>FancyLink</title>
     <meta charset="utf-8" />
     <style>
       body {
@@ -14,19 +14,44 @@
     <div id="app1"></div>
     <div id="app2"></div>
     <div id="app3"></div>
-    <div id="app4"></div>
     <script src="../libs/react.js"></script>
     <script src="../libs/react-dom.js"></script>
     <script src="../libs/babel.js"></script>
     <script src="../libs/prop-types.js"></script>
     <script type="text/babel">
+      function FancyLink(props) {
+        const classes = ["link-core"];
+        switch (props.variant) {
+          case "small":
+            classes.push("link-small");
+            break;
+          case "huge":
+            classes.push("link-huge");
+            break;
+          default:
+            classes.push("link-default");
+        }
 
-      ReactDOM.render(<Example1 />, document.getElementById("app1"));
+        return (
+          <a {...props} className={classes.join(" ")}>
+            {props.children}
+          </a>
+        );
+      }
+
+      ReactDOM.render(
+        <FancyLink
+          href="https://example.org"
+          rel="canonical"
+          target="_blank"
+          variant="small"
+        >
+          <span>Follow me</span>
+        </FancyLink>,
+        document.getElementById("app1")
+      );
       ReactDOM.render(<Example2 />, document.getElementById("app2"));
-
       ReactDOM.render(<Example3 />, document.getElementById("app3"));
-
-      ReactDOM.render(<Example4 />, document.getElementById("app4"));
     </script>
   </body>
 </html>
