@@ -10,7 +10,6 @@
     </style>
   </head>
   <body>
-    <!--//You can use HTML entities in JSX like so:-->
     <div id="app1"></div>
     <div id="app2"></div>
     <div id="app3"></div>
@@ -39,6 +38,51 @@
         );
       }
 
+      function FancyLink2(props) {
+        const classes = ["link-core"];
+        switch (props.variant) {
+          case "small":
+            classes.push("link-small");
+            break;
+          case "huge":
+            classes.push("link-huge");
+            break;
+          default:
+            classes.push("link-default");
+        }
+        const attribs = Object.assign({}, props); //shallow clone
+        delete attribs.variant;
+
+        return (
+          <a {...attribs} className={classes.join(" ")}>
+            {props.children}
+          </a>
+        );
+      }
+
+      function FancyLink3(props) {
+        /*you can clone only the props you’ll pass to the browser 
+        and at the same time assign the other ones to local variables*/
+        const { variant, ...attribs } = props;
+        const classes = ["link-core"];
+        switch (variant) {
+          case "small":
+            classes.push("link-small");
+            break;
+          case "huge":
+            classes.push("link-huge");
+            break;
+          default:
+            classes.push("link-default");
+        }
+
+        return (
+          <a {...attribs} className={classes.join(" ")}>
+            {props.children}
+          </a>
+        );
+      }
+
       ReactDOM.render(
         <FancyLink
           href="https://example.org"
@@ -50,8 +94,28 @@
         </FancyLink>,
         document.getElementById("app1")
       );
-      ReactDOM.render(<Example2 />, document.getElementById("app2"));
-      ReactDOM.render(<Example3 />, document.getElementById("app3"));
+      ReactDOM.render(
+        <FancyLink2
+          href="https://example.org"
+          rel="canonical"
+          target="_blank"
+          variant="small"
+        >
+          <span>Follow me</span>
+        </FancyLink2>,
+        document.getElementById("app2")
+      );
+      ReactDOM.render(
+        <FancyLink3
+          href="https://example.org"
+          rel="canonical"
+          target="_blank"
+          variant="small"
+        >
+          <span>Follow me</span>
+        </FancyLink3>,
+        document.getElementById("app3")
+      );
     </script>
   </body>
 </html>
