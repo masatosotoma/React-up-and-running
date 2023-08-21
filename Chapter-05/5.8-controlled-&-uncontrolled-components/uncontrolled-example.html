@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Uncontrolled example</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../styles/table.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="../libs/react.js"></script>
+    <script src="../libs/react-dom.js"></script>
+    <script src="../libs/babel.js"></script>
+    <script src="../libs/prop-types.js"></script>
+    <script type="text/babel">
+      const profile = {
+        firstname: "Jessie",
+        lastname: "pinkman",
+        gender: "male",
+        acceptTOC: false,
+      };
+
+      function updateProfile({ target }) {
+        profile[target.name] =
+          target.type === "checkbox" ? target.checked === true : target.value;
+        console.log(profile);
+      }
+
+      function UncontrolledForm() {
+        return (
+          <form onChange={updateProfile}>
+            <label>
+              First name:{" "}
+              <input
+                type="text"
+                name="firstname"
+                defaultValue={profile.firstname}
+              />
+            </label>
+            <br />
+            <label>
+              Last name:{" "}
+              <input
+                type="text"
+                name="lastname"
+                defaultValue={profile.lastname}
+              />
+            </label>
+            <br />
+            Gender:
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                defaultValue={profile.gender === "male"}
+                value="male"
+              />
+              Male
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="gender"
+                defaultValue={profile.gender === "female"}
+                value="female"
+              />
+              Famle
+            </label>
+            <br />
+            <label>
+              <input
+                type="checkbox"
+                name="acceptTOC"
+                defaultValue={profile.acceptTOC === true}
+              />
+            </label>
+            I accept terms and things
+          </form>
+        );
+      }
+
+      ReactDOM.render(<UncontrolledForm />, document.getElementById("app"));
+    </script>
+  </body>
+</html>
