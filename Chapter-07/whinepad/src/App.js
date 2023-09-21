@@ -1,5 +1,10 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+
+import React from "react";
+import ProtoTypes from "prop-types";
+import { useState, useReducer } from "react";
+import clone from '../modules/clone.js';
 
 function App() {
   return (
