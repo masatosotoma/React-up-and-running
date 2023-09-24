@@ -1,3 +1,7 @@
+
+import {useState, useReducer} from 'react'; import PropTypes from 'prop-types';
+import clone from '../modules/clone';
+
 function Excel({ headers, initialData }) {
   const [data, dispatch] = useReducer(reducer, initialData);
   const [sorting, setSorting] = useState({
