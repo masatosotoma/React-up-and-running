@@ -4,11 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import React from "react";
-import ProtoTypes from "prop-types";
-import { useState, useReducer } from "react";
-import clone from "./modules/clone";
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
