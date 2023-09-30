@@ -1,26 +1,25 @@
 import "./App.css";
-import Excel from "./components/Excel";
+import Discovery from "./components/Discovery";
+import DataFlow from "./components/DataFlow";
+// uncomment for the state-only option
+// import DataFlow from './components/DataFlow1';
+import schema from "./config/schema";
 
-const headers = localStorage.getItem("headers");
-const data = localStorage.getItem("data");
-if (!headers) {
-  headers = ["Title", "Year", "Rating", "Comments"];
-  data = [["Red whine", "2021", "3", "meh"]];
+const isDiscovery = window.location.pathname.replace(/\//g, "") === "discovery";
+
+let data = JSON.parse(localStorage.getItem("data"));
+
+// default example data, read from the schema
+if (!data) {
+  data = [{}];
+  Object.keys(schema).forEach((key) => (data[0][key] = schema[key].samples[0]));
 }
 
 function App() {
-  return (
-    <div>
-      {" "}
-      <Excel
-        headers={["Name", "Year"]}
-        initialData={[
-          ["Charles", "1859"],
-          ["Antoine", "1943"],
-        ]}
-      />{" "}
-    </div>
-  );
+  if (isDiscovery) {
+    return <Discovery />;
+  }
+  return <DataFlow schema={schema} initialData={data} />;
 }
 
 export default App;
