@@ -1,6 +1,7 @@
 import { useState, useReducer } from "react";
 import PropTypes from "prop-types";
 import clone from "../modules/clone";
+import reducer from "./Reducer";
 
 import "./Excel.css";
 
