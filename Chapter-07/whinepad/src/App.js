@@ -2,8 +2,9 @@ import "./App.css";
 import Excel from "./components/Excel";
 
 function App() {
+  
   return (
-    <div>
+    <div className="Excel">
       {" "}
       <Excel
         headers={["Name", "Year"]}
