@@ -77,9 +77,6 @@ function Excel({ headers, initialData }) {
   return (
     <div>
       <div className="toolbar">
-        <button onClick={toggleSearch}>
-          {search ? "Hide search" : "Show search"}
-        </button>
       </div>
       <table>
         <thead onClick={sort}>
