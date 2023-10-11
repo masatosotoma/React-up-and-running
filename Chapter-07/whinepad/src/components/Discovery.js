@@ -15,3 +15,5 @@ function Discovery() {
     </div>
   );
 }
+
+export default Discovery
